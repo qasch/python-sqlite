@@ -31,19 +31,17 @@ def get_user_input():
     nachname = input("Bitte einen Nachnamen eingeben: ")
     telefonnummer = input("Bitte eine Telefonnummer eingeben: ")
 
-vorname = ''
-nachname = ''
-telefonnummer = ''
+    user_input_list = [vorname, nachname, telefonnummer]
+
+    return user_input_list
 
 
 def insert_data_into_database():
     # Datensätze in die Datenbank einfügen
-    get_user_input()
     cur.execute("""INSERT INTO person 
                         (vorname, nachname, telefonnummer)
                     VALUES 
-                        (:vorname, :nachname, :telefonnummer)""",
-                        {'vorname': vorname, 'nachname': nachname, 'telefonnummer': telefonnummer}
+                        (?, ?, ?)""", get_user_input()
                 )
 
 
@@ -55,6 +53,7 @@ insert_data_into_database()
 connection.commit()
 
 """Datensätze anzeigen"""
+print()
 result = cur.execute("""SELECT * FROM person""")
 
 # Ergebnis auf der Konsole ausgeben
