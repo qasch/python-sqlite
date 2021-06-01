@@ -26,7 +26,8 @@ def create_database_table():
 
 
 def get_user_input():
-    """Benutzereingabe"""
+    """Benutzereingabe
+    ACHTUNG: Es findet noch keine Validierung der Eingaben statt!"""
     vorname = input("Bitte einen Vornamen eingeben: ")
     nachname = input("Bitte einen Nachnamen eingeben: ")
     telefonnummer = input("Bitte eine Telefonnummer eingeben: ")
@@ -43,21 +44,28 @@ def insert_data_into_database():
                     VALUES 
                         (?, ?, ?)""", get_user_input()
                 )
+    # In Datenbank schreiben
+    connection.commit()
 
 
 create_database_table()
-insert_data_into_database()
 
 
-# In Datenbank schreiben
-connection.commit()
+execute_program = True
+while execute_program:
+    user_action = input("Datensatz [e]infügen\nDatenbank [a]nzeigen\nProgramm [b]eenden?")
+    if user_action == 'e':
+        insert_data_into_database()
+    elif user_action == 'a':
+        """Datensätze anzeigen"""
+        result = cur.execute("""SELECT * FROM person""")
+        # Ergebnis auf der Konsole ausgeben
+        print(result.fetchall())
+    elif user_action == 'b':
+        execute_program = False
 
-"""Datensätze anzeigen"""
-print()
-result = cur.execute("""SELECT * FROM person""")
-
-# Ergebnis auf der Konsole ausgeben
-print(result.fetchall())
 
 # Datenbankverbindung schliessen
 connection.close()
+
+print("Das wars, Programm beendet.")
